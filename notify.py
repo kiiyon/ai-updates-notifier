@@ -90,7 +90,17 @@ def main():
         return
 
     state = load_state()
-    notifications: List[str] = []
+    notifications = {"OpenAI": [], "Anthropic": [], "Other": []}
+
+    # Helper function to categorize
+    def add_notification(text: str, source_name: str):
+        lower_text = (text + source_name).lower()
+        if "openai" in lower_text:
+            notifications["OpenAI"].append(text)
+        elif "anthropic" in lower_text or "claude" in lower_text:
+            notifications["Anthropic"].append(text)
+        else:
+            notifications["Other"].append(text)
 
     # 1) npm
     print("Checking npm packages...")
@@ -102,10 +112,8 @@ def main():
         if prev != latest:
             if "npm" not in state: state["npm"] = {}
             state["npm"][pkg] = latest
-            notifications.append(
-                f"📦 npm update: `{pkg}` → **{latest}**\n"
-                f"https://www.npmjs.com/package/{pkg}\n"
-            )
+            msg = f"📦 npm: `{pkg}` → **{latest}**\nhttps://www.npmjs.com/package/{pkg}"
+            add_notification(msg, pkg)
 
     # 2) GitHub releases
     print("Checking GitHub releases...")
@@ -117,10 +125,8 @@ def main():
         if prev != rel["tag"]:
             if "github" not in state: state["github"] = {}
             state["github"][label] = rel["tag"]
-            notifications.append(
-                f"🏷️ GitHub Release: `{label}` → **{rel['name']}** ({rel['tag']})\n"
-                f"{rel['url']}\n"
-            )
+            msg = f"🏷️ GitHub: `{label}` → **{rel['name']}** ({rel['tag']})\n{rel['url']}"
+            add_notification(msg, label)
 
     # 3) OpenAI RSS
     print("Checking OpenAI RSS...")
@@ -130,14 +136,37 @@ def main():
         if prev != latest["id"]:
             if "rss" not in state: state["rss"] = {}
             state["rss"]["openai_news"] = latest["id"]
-            notifications.append(
-                f"📰 OpenAI News: **{latest['title']}**\n{latest['link']}\n"
-            )
+            msg = f"📰 News: **{latest['title']}**\n{latest['link']}"
+            add_notification(msg, "openai")
 
-    if notifications:
+    # Construct Message
+    final_blocks = []
+    
+    # OpenAI Section
+    if notifications["OpenAI"]:
+        final_blocks.append("🟦 **OpenAI Updates**")
+        final_blocks.extend(notifications["OpenAI"])
+        final_blocks.append("") # Spacer
+
+    # Anthropic Section
+    if notifications["Anthropic"]:
+        final_blocks.append("🟧 **Anthropic Updates**")
+        final_blocks.extend(notifications["Anthropic"])
+        final_blocks.append("") # Spacer
+
+    # Other Section
+    if notifications["Other"]:
+        final_blocks.append("⬜ **Other Updates**")
+        final_blocks.extend(notifications["Other"])
+    
+    if final_blocks:
+        # Remove trailing empty string if exists
+        if final_blocks[-1] == "": final_blocks.pop()
+        
         print("Sending notifications to Discord...")
-        msg = "🚨 **AI Updates**\n\n" + "\n".join(notifications)
-        discord_post(webhook, msg)
+        # Join with newlines
+        full_msg = "\n".join(final_blocks)
+        discord_post(webhook, f"🚨 **AI Tech Updates**\n\n{full_msg}")
     else:
         print("No new updates.")
 
