@@ -1,10 +1,10 @@
 {
   "npm": {
-    "@openai/codex": "0.86.0",
+    "@openai/codex": "0.87.0",
     "@anthropic-ai/claude-code": "2.1.9"
   },
   "github": {
-    "openai/codex": "rust-v0.86.0"
+    "openai/codex": "rust-v0.87.0"
   },
   "rss": {
     "openai_news": "https://openai.com/index/investing-in-merge-labs"
