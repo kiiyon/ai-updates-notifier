@@ -1,7 +1,7 @@
 {
   "npm": {
     "@openai/codex": "0.89.0",
-    "@anthropic-ai/claude-code": "2.1.16"
+    "@anthropic-ai/claude-code": "2.1.17"
   },
   "github": {
     "openai/codex": "rust-v0.89.0"
