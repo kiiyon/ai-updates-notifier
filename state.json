@@ -7,6 +7,6 @@
     "openai/codex": "rust-v0.88.0"
   },
   "rss": {
-    "openai_news": "https://openai.com/index/praktika"
+    "openai_news": "https://openai.com/index/scaling-postgresql"
   }
 }
