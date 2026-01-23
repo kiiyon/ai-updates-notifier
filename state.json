@@ -7,6 +7,6 @@
     "openai/codex": "rust-v0.89.0"
   },
   "rss": {
-    "openai_news": "https://openai.com/index/scaling-postgresql"
+    "openai_news": "https://openai.com/index/unrolling-the-codex-agent-loop"
   }
 }
