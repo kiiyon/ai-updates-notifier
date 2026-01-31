@@ -1,10 +1,10 @@
 {
   "npm": {
-    "@openai/codex": "0.92.0",
+    "@openai/codex": "0.93.0",
     "@anthropic-ai/claude-code": "2.1.27"
   },
   "github": {
-    "openai/codex": "rust-v0.92.0"
+    "openai/codex": "rust-v0.93.0"
   },
   "rss": {
     "openai_news": "https://openai.com/index/inside-our-in-house-data-agent"
